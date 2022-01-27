@@ -9,7 +9,7 @@ class BytebankApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: TransferForm(),
+        body: TransferList(),
       ),
     );
   }
@@ -21,47 +21,62 @@ class TransferForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void submitTransfer() {
+      final String? accountNumber = _controllerAccount.text;
+      final double? value = double.tryParse(_controllerValue.text);
+
+      if (![accountNumber, value].contains(null)) {
+        final createdTransfer = Transfer(accountNumber!, value!);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    '$createdTransfer',
+                  ),
+                ),
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    },
+                    child: Text(
+                      'Fechar',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            backgroundColor: Colors.blueAccent,
+          ),
+        );
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Criando Transferência'),
       ),
       body: Column(
         children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(top: 13, left: 30, right: 30, bottom: 8),
-            child: TextField(
-              controller: _controllerAccount,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.account_balance),
-                labelText: 'Número da conta',
-                hintText: '0000-0',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
+          Editor(
+            controller: _controllerAccount,
+            label: 'Número da conta',
+            hint: '00000-0',
+            icon: Icons.account_balance,
           ),
-          Padding(
-            padding:
-                const EdgeInsets.only(top: 13, left: 30, right: 30, bottom: 8),
-            child: TextField(
-              controller: _controllerValue,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.monetization_on),
-                labelText: 'Valor depositado',
-                hintText: 'R\$ 00.00',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
+          Editor(
+            controller: _controllerValue,
+            label: 'Valor depositado',
+            hint: 'R\$ 00.00',
+            icon: Icons.monetization_on,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 30),
@@ -70,45 +85,7 @@ class TransferForm extends StatelessWidget {
               height: 40,
               child: ElevatedButton(
                 child: Text('Confirmar'),
-                onPressed: () {
-                  final String? accountNumber = _controllerAccount.text;
-                  final double? value = double.tryParse(_controllerValue.text);
-
-                  if (![accountNumber, value].contains(null)) {
-                    final createdTransfer = Transfer(accountNumber!, value!);
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: Text(
-                                '$createdTransfer',
-                              ),
-                            ),
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context)
-                                      .hideCurrentSnackBar();
-                                },
-                                child: Text(
-                                  'Fechar',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        backgroundColor: Colors.blueAccent,
-                      ),
-                    );
-                  }
-                },
+                onPressed: () => submitTransfer(),
               ),
             ),
           ),
@@ -119,7 +96,7 @@ class TransferForm extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
-                return TransferList();
+                return TransferForm();
               },
             ),
           );
@@ -139,7 +116,15 @@ class TransferList extends StatelessWidget {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return TransferForm();
+              },
+            ),
+          );
+        },
         child: Icon(Icons.add),
       ),
       body: Column(
@@ -170,6 +155,42 @@ class TransferItem extends StatelessWidget {
         ),
         title: Text(_transfer.account),
         subtitle: Text('R\$ ${_transfer.value}'),
+      ),
+    );
+  }
+}
+
+class Editor extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final String hint;
+  final IconData? icon;
+
+  const Editor({
+    Key? key,
+    required this.controller,
+    required this.label,
+    required this.hint,
+    this.icon,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 13, left: 30, right: 30, bottom: 8),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          prefixIcon: icon != null ? Icon(icon) : null,
+          labelText: label,
+          hintText: hint,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+        style: TextStyle(
+          fontSize: 16,
+        ),
       ),
     );
   }
