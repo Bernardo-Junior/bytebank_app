@@ -76,7 +76,7 @@ class TransferForm extends StatelessWidget {
 
                   if (![accountNumber, value].contains(null)) {
                     final createdTransfer = Transfer(accountNumber!, value!);
-                    debugPrint('$createdTransfer');
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Row(
