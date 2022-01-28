@@ -8,15 +8,35 @@ class BytebankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: TransferList(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.light(
+          // Colors from buttons
+          secondary: Colors.blueAccent.shade700,
+          // Color from text
+          onPrimary: Colors.white,
+          // Colors from icons
+          onSecondary: Colors.white,
+          // Colors from containers
+          primary: Colors.green.shade900,
+        ),
       ),
+      home: TransferList(),
     );
   }
 }
 
-class TransferForm extends StatelessWidget {
+class TransferForm extends StatefulWidget {
+  final BuildContext keyTransferList;
+
+  TransferForm({required this.keyTransferList});
+
+  @override
+  State<TransferForm> createState() => _TransferFormState();
+}
+
+class _TransferFormState extends State<TransferForm> {
   final TextEditingController _controllerAccount = TextEditingController();
+
   final TextEditingController _controllerValue = TextEditingController();
 
   @override
@@ -42,7 +62,8 @@ class TransferForm extends StatelessWidget {
                 Expanded(
                   child: TextButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(widget.keyTransferList)
+                          .hideCurrentSnackBar();
                     },
                     child: Text(
                       'Fechar',
@@ -57,6 +78,7 @@ class TransferForm extends StatelessWidget {
             backgroundColor: Colors.blueAccent,
           ),
         );
+        Navigator.pop(context, createdTransfer);
       }
     }
 
@@ -64,75 +86,100 @@ class TransferForm extends StatelessWidget {
       appBar: AppBar(
         title: Text('Criando Transferência'),
       ),
-      body: Column(
-        children: [
-          Editor(
-            controller: _controllerAccount,
-            label: 'Número da conta',
-            hint: '00000-0',
-            icon: Icons.account_balance,
-          ),
-          Editor(
-            controller: _controllerValue,
-            label: 'Valor depositado',
-            hint: 'R\$ 00.00',
-            icon: Icons.monetization_on,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: Container(
-              width: 200,
-              height: 40,
-              child: ElevatedButton(
-                child: Text('Confirmar'),
-                onPressed: () => submitTransfer(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Editor(
+              controller: _controllerAccount,
+              label: 'Número da conta',
+              hint: '00000-0',
+              icon: Icons.account_balance,
+            ),
+            Editor(
+              controller: _controllerValue,
+              label: 'Valor depositado',
+              hint: 'R\$ 00.00',
+              icon: Icons.monetization_on,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 30),
+              child: Container(
+                width: 200,
+                height: 40,
+                child: ElevatedButton(
+                  child: Text('Confirmar'),
+                  onPressed: () => submitTransfer(),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return TransferForm();
-              },
-            ),
-          );
-        },
+        onPressed: () {},
         child: Icon(Icons.add),
       ),
     );
   }
 }
 
-class TransferList extends StatelessWidget {
+class TransferList extends StatefulWidget {
+  final List<Transfer> _transfers = List.empty(growable: true);
+
+  @override
+  State<StatefulWidget> createState() {
+    return TransferListState();
+  }
+}
+
+class TransferListState extends State<TransferList> {
+  final GlobalKey _keyTransferList = GlobalKey();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget._transfers.add(Transfer('asdasd', 22));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _keyTransferList,
       appBar: AppBar(
         title: Text('Transferências'),
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          final Future<Transfer?> transferCreated = Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
-                return TransferForm();
+                return TransferForm(
+                  keyTransferList: _keyTransferList.currentContext!,
+                );
               },
             ),
           );
+          transferCreated.then((transferReceived) {
+            debugPrint('CHEGOU NO THEN');
+            debugPrint('$transferReceived');
+            if (transferReceived != null) {
+              Future.delayed(Duration(seconds: 5), () {
+                setState(() {
+                  widget._transfers.add(transferReceived);
+                });
+              });
+            }
+          });
         },
         child: Icon(Icons.add),
       ),
-      body: Column(
-        children: [
-          TransferItem(
-            Transfer('12551-2', 100.00),
-          ),
-        ],
+      body: ListView.builder(
+        itemCount: widget._transfers.length,
+        itemBuilder: (context, index) {
+          final transfer = widget._transfers[index];
+          return TransferItem(transfer);
+        },
       ),
     );
   }
