@@ -32,13 +32,6 @@ class _TransferFormState extends State<TransferForm> {
       symbol: 'R\$ ',
     );
 
-    final CurrencyTextInputFormatter formatterAccount =
-        CurrencyTextInputFormatter(
-      locale: 'pt',
-      decimalDigits: 0,
-      symbol: '',
-    );
-
     void submitTransfer() {
       final String? accountNumber = _controllerAccount.text;
       final double? value =

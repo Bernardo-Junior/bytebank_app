@@ -1,21 +1,21 @@
 import 'package:bytebank/models/transfer.dart';
-import 'package:bytebank/screens/transfer/item.dart';
+import 'package:bytebank/screens/transfer/widgets/item.dart';
 import 'package:flutter/material.dart';
 
-import 'form.dart';
+import 'widgets/form.dart';
 
 const _titleAppBar = 'Transferências';
 
-class TransferList extends StatefulWidget {
+class TransferScreen extends StatefulWidget {
   final List<Transfer> _transfers = List.empty(growable: true);
 
   @override
   State<StatefulWidget> createState() {
-    return TransferListState();
+    return TransferScreenState();
   }
 }
 
-class TransferListState extends State<TransferList> {
+class TransferScreenState extends State<TransferScreen> {
   final GlobalKey _keyTransferList = GlobalKey();
   @override
   void initState() {

@@ -1,4 +1,4 @@
-import 'package:bytebank/screens/transfer/list.dart';
+import 'package:bytebank/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(BytebankApp());
@@ -22,7 +22,7 @@ class BytebankApp extends StatelessWidget {
           onSurface: Colors.red,
         ),
       ),
-      home: TransferList(),
+      home: DashboardScreen(),
     );
   }
 }
