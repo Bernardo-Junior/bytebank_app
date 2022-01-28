@@ -1,10 +1,12 @@
 import 'package:bytebank/components/editor.dart';
 import 'package:bytebank/models/transfer.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 const _titleAppBar = 'Criando Transferência';
 const _labelAccount = 'Número da conta';
-const _hintAccount = '00000-0';
+const _hintAccount = '000000';
 const _labelValue = 'Valor depositado';
 const _hintValue = 'R\$ 00.00';
 const _textButton = 'Confirmar';
@@ -21,16 +23,29 @@ class TransferForm extends StatefulWidget {
 class _TransferFormState extends State<TransferForm> {
   final TextEditingController _controllerAccount = TextEditingController();
 
-  final TextEditingController _controllerValue = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
+    final CurrencyTextInputFormatter formatterValue =
+        CurrencyTextInputFormatter(
+      locale: 'pt',
+      decimalDigits: 2,
+      symbol: 'R\$ ',
+    );
+
+    final CurrencyTextInputFormatter formatterAccount =
+        CurrencyTextInputFormatter(
+      locale: 'pt',
+      decimalDigits: 0,
+      symbol: '',
+    );
+
     void submitTransfer() {
       final String? accountNumber = _controllerAccount.text;
-      final double? value = double.tryParse(_controllerValue.text);
+      final double? value =
+          double.tryParse(formatterValue.getUnformattedValue().toString());
 
-      if (![accountNumber, value].contains(null)) {
-        final createdTransfer = Transfer(accountNumber!, value!);
+      if (![accountNumber, value].contains(null) && accountNumber!.isNotEmpty) {
+        final createdTransfer = Transfer(accountNumber, value!);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -78,12 +93,14 @@ class _TransferFormState extends State<TransferForm> {
               label: _labelAccount,
               hint: _hintAccount,
               icon: Icons.account_balance,
+              typeInput: TextInputType.number,
             ),
             Editor(
-              controller: _controllerValue,
               label: _labelValue,
               hint: _hintValue,
               icon: Icons.monetization_on,
+              formatter: <TextInputFormatter>[formatterValue],
+              typeInput: TextInputType.number,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 30),

@@ -20,7 +20,6 @@ class TransferListState extends State<TransferList> {
   @override
   void initState() {
     super.initState();
-    widget._transfers.add(Transfer('asdasd', 22));
   }
 
   @override
@@ -56,13 +55,17 @@ class TransferListState extends State<TransferList> {
         },
         child: Icon(Icons.add),
       ),
-      body: ListView.builder(
-        itemCount: widget._transfers.length,
-        itemBuilder: (context, index) {
-          final transfer = widget._transfers[index];
-          return TransferItem(transfer);
-        },
-      ),
+      body: widget._transfers.isNotEmpty
+          ? ListView.builder(
+              itemCount: widget._transfers.length,
+              itemBuilder: (context, index) {
+                final transfer = widget._transfers[index];
+                return TransferItem(transfer);
+              },
+            )
+          : Center(
+              child: Text('Nenhuma transferência registrada'),
+            ),
     );
   }
 }
