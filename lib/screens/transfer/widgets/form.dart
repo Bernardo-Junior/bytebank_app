@@ -1,4 +1,4 @@
-import 'package:bytebank/components/editor.dart';
+import 'package:bytebank/components/input.dart';
 import 'package:bytebank/models/transfer.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
@@ -81,14 +81,14 @@ class _TransferFormState extends State<TransferForm> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Editor(
+            Input(
               controller: _controllerAccount,
               label: _labelAccount,
               hint: _hintAccount,
               icon: Icons.account_balance,
               typeInput: TextInputType.number,
             ),
-            Editor(
+            Input(
               label: _labelValue,
               hint: _hintValue,
               icon: Icons.monetization_on,

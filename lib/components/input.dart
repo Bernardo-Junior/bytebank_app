@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Editor extends StatelessWidget {
+class Input extends StatelessWidget {
   final TextEditingController? controller;
   final String label;
   final String hint;
   final IconData? icon;
   final List<TextInputFormatter>? formatter;
   final TextInputType typeInput;
+  final bool enableBorder;
 
-  const Editor({
+  const Input({
     Key? key,
     this.controller,
     required this.typeInput,
@@ -17,6 +18,7 @@ class Editor extends StatelessWidget {
     required this.hint,
     this.icon,
     this.formatter,
+    this.enableBorder = true,
   }) : super(key: key);
 
   @override
@@ -29,9 +31,11 @@ class Editor extends StatelessWidget {
           prefixIcon: icon != null ? Icon(icon) : null,
           labelText: label,
           hintText: hint,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
+          border: enableBorder
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                )
+              : null,
         ),
         inputFormatters: formatter != null ? formatter : null,
         keyboardType: typeInput,
