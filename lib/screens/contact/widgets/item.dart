@@ -13,6 +13,12 @@ class ContactItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.contact_phone_sharp),
+          ],
+        ),
         title: Text(
           contact.name,
           style: TextStyle(fontSize: 18),
