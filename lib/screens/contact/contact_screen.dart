@@ -37,26 +37,27 @@ class ContactsScreen extends StatelessWidget {
         title: Text('Contacts'),
       ),
       body: AnimatedBuilder(
-          animation: Listenable.merge(
-              [_contactController.contacts, _contactController.loading]),
-          builder: (_, __) {
-            if (_contactController.loading.value) {
-              return message('Loading', true);
-            }
+        animation: Listenable.merge(
+          [_contactController.contacts, _contactController.loading],
+        ),
+        builder: (_, __) {
+          if (_contactController.loading.value) {
+            return message('Loading', true);
+          }
 
-            if (_contactController.contacts.value.isEmpty) {
-              return message('Nenhum contato adicionado', false);
-            }
+          if (_contactController.contacts.value.isEmpty) {
+            return message('Nenhum contato adicionado', false);
+          }
 
-            return ListView.builder(
-              itemCount: _contactController.contacts.value.length,
-              itemBuilder: (context, index) {
-                final Contact contact =
-                    _contactController.contacts.value[index];
-                return ContactItem(contact: contact);
-              },
-            );
-          }),
+          return ListView.builder(
+            itemCount: _contactController.contacts.value.length,
+            itemBuilder: (context, index) {
+              final Contact contact = _contactController.contacts.value[index];
+              return ContactItem(contact: contact);
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(

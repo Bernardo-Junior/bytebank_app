@@ -13,6 +13,7 @@ class ContactItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        minVerticalPadding: 10,
         leading: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -23,7 +24,10 @@ class ContactItem extends StatelessWidget {
           contact.name,
           style: TextStyle(fontSize: 18),
         ),
-        subtitle: Text('${contact.accountNumber}'),
+        subtitle: Container(
+          margin: EdgeInsets.only(top: 10),
+          child: Text('${contact.accountNumber}'),
+        ),
       ),
     );
   }
