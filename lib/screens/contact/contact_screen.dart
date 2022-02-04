@@ -13,22 +13,53 @@ class ContactsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Contacts'),
       ),
-      body: FutureBuilder(
-        future: findAll(),
+      body: FutureBuilder<List<Contact>>(
+        initialData: [],
+        future: Future.delayed(Duration(seconds: 1)).then((value) => findAll()),
         builder: (context, AsyncSnapshot<List<Contact>> snapshot) {
           List<Contact> contacts = List.empty(growable: true);
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.data != null) {
-            contacts = snapshot.data!;
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(bottom: 5),
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    ),
+                    Text('Loading'),
+                  ],
+                ),
+              );
+            case ConnectionState.done:
+              if (snapshot.data != null) {
+                contacts = snapshot.data!;
+              }
+              return ListView.builder(
+                itemCount: contacts.length,
+                itemBuilder: (context, index) {
+                  final Contact contact = contacts[index];
+                  return ContactItem(contact: contact);
+                },
+              );
+            default:
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    Text('Unknown Error'),
+                  ],
+                ),
+              );
           }
-
-          return ListView.builder(
-            itemCount: contacts.length,
-            itemBuilder: (context, index) {
-              final Contact contact = contacts[index];
-              return ContactItem(contact: contact);
-            },
-          );
         },
       ),
       floatingActionButton: FloatingActionButton(
