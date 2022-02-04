@@ -57,45 +57,6 @@ class ContactsScreen extends StatelessWidget {
               },
             );
           }),
-
-      // FutureBuilder<List<Contact>>(
-      //   initialData: [],
-      //   future: Future.delayed(Duration(seconds: 1)).then((value) => findAll()),
-      //   builder: (context, AsyncSnapshot<List<Contact>> snapshot) {
-      //     print('AAAAAAA-d-as-das-das-d');
-      //     List<Contact> contacts = List.empty(growable: true);
-      //     switch (snapshot.connectionState) {
-      //       case ConnectionState.none:
-      //         return loading();
-      //       case ConnectionState.active:
-      //         return loading();
-      //       case ConnectionState.waiting:
-      //         return loading();
-      //       case ConnectionState.done:
-      //         if (snapshot.data != null) {
-      //           contacts = snapshot.data!;
-      //         }
-      //         return ListView.builder(
-      //           itemCount: contacts.length,
-      //           itemBuilder: (context, index) {
-      //             final Contact contact = contacts[index];
-      //             return ContactItem(contact: contact);
-      //           },
-      //         );
-      //       default:
-      //         return Center(
-      //           child: Column(
-      //             mainAxisAlignment: MainAxisAlignment.center,
-      //             crossAxisAlignment: CrossAxisAlignment.center,
-      //             children: [
-      //               CircularProgressIndicator(),
-      //               Text('Unknown Error'),
-      //             ],
-      //           ),
-      //         );
-      //     }
-      //   },
-      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
