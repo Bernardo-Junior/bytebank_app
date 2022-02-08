@@ -1,5 +1,5 @@
 import 'package:bytebank/components/input.dart';
-import 'package:bytebank/database/app_database.dart';
+import 'package:bytebank/database/dao/contact.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/contact/contact_controller.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class ContactForm extends StatefulWidget {
 class _ContactFormState extends State<ContactForm> {
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerAccount = TextEditingController();
-
+  final ContactDao _contactDao = ContactDao();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +58,7 @@ class _ContactFormState extends State<ContactForm> {
                   if (name.isNotEmpty && accountNumber != null) {
                     final Contact newContact = Contact(
                         id: 0, name: name, accountNumber: accountNumber);
-                    save(newContact).then((id) {
+                    _contactDao.save(newContact).then((id) {
                       widget.contactController.loadingContacts();
                       Navigator.of(context).pop();
                     });
