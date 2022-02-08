@@ -4,23 +4,27 @@ import 'package:sqflite/sqflite.dart';
 import '../app_database.dart';
 
 class ContactDao {
-  static const String tableSql = 'CREATE TABLE contacts('
-      'id INTEGER PRIMARY KEY, '
-      'name TEXT, '
-      'account_number INTEGER)';
+  static const String _id = 'id';
+  static const String _tableName = 'contacts';
+  static const String _name = 'name';
+  static const String _accountNumber = 'account_number';
+  static const String tableSql = 'CREATE TABLE $_tableName('
+      '$_id INTEGER PRIMARY KEY, '
+      '$_name TEXT, '
+      '$_accountNumber INTEGER)';
 
   Future<int> save(Contact contact) async {
     final Database db = await getDatabase();
 
     final contactMap = _toMap(contact);
 
-    return db.insert('contacts', contactMap);
+    return db.insert('$_tableName', contactMap);
   }
 
   Map<String, dynamic> _toMap(Contact contact) {
     return {
-      'name': contact.name,
-      'account_number': contact.accountNumber,
+      '$_name': contact.name,
+      '$_accountNumber': contact.accountNumber,
     };
   }
 
@@ -28,9 +32,9 @@ class ContactDao {
     final List<Contact> contacts = List.empty(growable: true);
     for (Map<String, dynamic> row in result) {
       final Contact contact = Contact(
-        id: row['id'],
-        name: row['name'],
-        accountNumber: row['account_number'],
+        id: row['$_id'],
+        name: row['$_name'],
+        accountNumber: row['$_accountNumber'],
       );
 
       contacts.add(contact);
@@ -42,7 +46,7 @@ class ContactDao {
   Future<List<Contact>> findAll() async {
     final Database db = await getDatabase();
 
-    final List<Map<String, dynamic>> result = await db.query('contacts');
+    final List<Map<String, dynamic>> result = await db.query('$_tableName');
     final contacts = _toList(result: result);
     return contacts;
   }
