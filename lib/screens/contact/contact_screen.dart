@@ -53,7 +53,10 @@ class ContactsScreen extends StatelessWidget {
             itemCount: _contactController.contacts.value.length,
             itemBuilder: (context, index) {
               final Contact contact = _contactController.contacts.value[index];
-              return ContactItem(contact: contact);
+              return ContactItem(
+                contact: contact,
+                contactController: _contactController,
+              );
             },
           );
         },

@@ -50,4 +50,15 @@ class ContactDao {
     final contacts = _toList(result: result);
     return contacts;
   }
+
+  Future<int> update(Contact todo) async {
+    final Database db = await getDatabase();
+    return await db.update('$_tableName', _toMap(todo),
+        where: '$_id = ?', whereArgs: [todo.id]);
+  }
+
+  Future<int> delete(int id) async {
+    final Database db = await getDatabase();
+    return await db.delete('$_tableName', where: '$_id = ?', whereArgs: [id]);
+  }
 }

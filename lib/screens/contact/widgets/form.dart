@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 
 class ContactForm extends StatefulWidget {
   final ContactController contactController;
-  const ContactForm({Key? key, required this.contactController})
+  final Contact? contact;
+  const ContactForm({Key? key, required this.contactController, this.contact})
       : super(key: key);
 
   @override
@@ -17,8 +18,14 @@ class _ContactFormState extends State<ContactForm> {
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerAccount = TextEditingController();
   final ContactDao _contactDao = ContactDao();
+
   @override
   Widget build(BuildContext context) {
+    final isUpdate = widget.contact != null;
+    if (isUpdate) {
+      _controllerName.text = widget.contact!.name;
+      _controllerAccount.text = widget.contact!.accountNumber.toString();
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('New Contact'),
@@ -56,15 +63,27 @@ class _ContactFormState extends State<ContactForm> {
                       int.tryParse(_controllerAccount.text);
 
                   if (name.isNotEmpty && accountNumber != null) {
-                    final Contact newContact = Contact(
-                        id: 0, name: name, accountNumber: accountNumber);
-                    _contactDao.save(newContact).then((id) {
-                      widget.contactController.loadingContacts();
-                      Navigator.of(context).pop();
-                    });
+                    if (isUpdate) {
+                      final Contact newContact = Contact(
+                        id: widget.contact!.id,
+                        name: name,
+                        accountNumber: accountNumber,
+                      );
+                      _contactDao.update(newContact).then((id) {
+                        widget.contactController.loadingContacts();
+                        Navigator.of(context).pop();
+                      });
+                    } else {
+                      final Contact newContact =
+                          Contact(name: name, accountNumber: accountNumber);
+                      _contactDao.save(newContact).then((id) {
+                        widget.contactController.loadingContacts();
+                        Navigator.of(context).pop();
+                      });
+                    }
                   }
                 },
-                child: Text('Create'),
+                child: Text(isUpdate ? 'Update' : 'Create'),
               ),
             ),
           )
