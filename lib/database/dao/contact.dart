@@ -8,8 +8,8 @@ class ContactDao {
   static const String _tableName = 'contacts';
   static const String _name = 'name';
   static const String _accountNumber = 'account_number';
-  static const String tableSql = 'CREATE TABLE $_tableName('
-      '$_id INTEGER PRIMARY KEY, '
+  static const String tableSql = 'CREATE TABLE contacts('
+      '$_id INTEGER PRIMARY KEY AUTOINCREMENT, '
       '$_name TEXT, '
       '$_accountNumber INTEGER)';
 

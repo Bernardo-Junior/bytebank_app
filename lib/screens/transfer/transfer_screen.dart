@@ -1,3 +1,4 @@
+import 'package:bytebank/database/dao/transfer.dart';
 import 'package:bytebank/models/transfer.dart';
 import 'package:bytebank/screens/transfer/widgets/item.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +8,6 @@ import 'widgets/form.dart';
 const _titleAppBar = 'Transferências';
 
 class TransferScreen extends StatefulWidget {
-  final List<Transfer> _transfers = List.empty(growable: true);
-
   @override
   State<StatefulWidget> createState() {
     return TransferScreenState();
@@ -16,10 +15,22 @@ class TransferScreen extends StatefulWidget {
 }
 
 class TransferScreenState extends State<TransferScreen> {
+  List<Transfer> _transfers = List.empty(growable: true);
   final GlobalKey _keyTransferList = GlobalKey();
+
+  final TransferDao transferDao = TransferDao();
+
   @override
   void initState() {
     super.initState();
+    initAsync();
+  }
+
+  void initAsync() async {
+    final transfers = await transferDao.findAll();
+    setState(() {
+      _transfers = transfers;
+    });
   }
 
   @override
@@ -44,10 +55,12 @@ class TransferScreenState extends State<TransferScreen> {
             if (transferReceived != null) {
               Future.delayed(
                 Duration(seconds: 1),
-                () {
-                  setState(() {
-                    widget._transfers.add(transferReceived);
-                  });
+                () async {
+                  final id = await transferDao.save(transferReceived);
+
+                  if (id >= 0) {
+                    initAsync();
+                  }
                 },
               );
             }
@@ -55,11 +68,12 @@ class TransferScreenState extends State<TransferScreen> {
         },
         child: Icon(Icons.add),
       ),
-      body: widget._transfers.isNotEmpty
+      body: _transfers.isNotEmpty
           ? ListView.builder(
-              itemCount: widget._transfers.length,
+              itemCount: _transfers.length,
               itemBuilder: (context, index) {
-                final transfer = widget._transfers[index];
+                final transfer = _transfers[index];
+
                 return TransferItem(transfer);
               },
             )

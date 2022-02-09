@@ -1,4 +1,5 @@
 import 'package:bytebank/database/dao/contact.dart';
+import 'package:bytebank/database/dao/transfer.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -12,8 +13,11 @@ Future<Database> getDatabase() async {
       db.execute(
         ContactDao.tableSql,
       );
+      db.execute(
+        TransferDao.tableSql,
+      );
     },
-    version: 1,
-    // onDowngrade: onDatabaseDowngradeDelete,
+    version: 16,
+    onDowngrade: onDatabaseDowngradeDelete,
   );
 }

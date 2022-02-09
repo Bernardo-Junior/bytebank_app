@@ -38,7 +38,7 @@ class _TransferFormState extends State<TransferForm> {
           double.tryParse(formatterValue.getUnformattedValue().toString());
 
       if (![accountNumber, value].contains(null) && accountNumber!.isNotEmpty) {
-        final createdTransfer = Transfer(accountNumber, value!);
+        final createdTransfer = Transfer(account: accountNumber, value: value!);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

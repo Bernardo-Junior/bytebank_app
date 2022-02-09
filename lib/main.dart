@@ -1,17 +1,8 @@
 import 'package:bytebank/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
   runApp(BytebankApp());
-  // save(
-  //   Contact(
-  //     id: 0,
-  //     name: 'Bernardo',
-  //     accountNumber: 1000,
-  //   ),
-  // ).then((id) {
-  //   findAll().then((contacts) => debugPrint(contacts.toString()));
-  // });
 }
 
 class BytebankApp extends StatelessWidget {
