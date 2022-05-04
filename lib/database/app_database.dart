@@ -7,6 +7,10 @@ Future<Database> getDatabase() async {
   final String dbPath = await getDatabasesPath();
   final String path = join(dbPath, 'bytebank.db');
 
+  Future _onConfigure(Database db) async {
+    await db.execute('PRAGMA foreign_keys = ON');
+  }
+
   return openDatabase(
     path,
     onCreate: (db, version) {
@@ -19,5 +23,6 @@ Future<Database> getDatabase() async {
     },
     version: 16,
     onDowngrade: onDatabaseDowngradeDelete,
+    onConfigure: _onConfigure,
   );
 }
