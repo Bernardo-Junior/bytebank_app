@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   sqflite:
   path:
+  dio: ^4.0.6
   
   currency_text_input_formatter: ^2.1.5
 
