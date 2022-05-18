@@ -1,7 +1,8 @@
 import 'package:bytebank/models/menu.dart';
 import 'package:bytebank/screens/contact/contact_screen.dart';
 import 'package:bytebank/screens/dashboard/widgets/menu.dart';
-import 'package:bytebank/screens/transaction/transaction_screen.dart';
+import 'package:bytebank/screens/transaction_feed/transaction_feed_screen.dart';
+
 import 'package:bytebank/screens/transfer/transfer_screen.dart';
 
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class DashboardScreen extends StatelessWidget {
     Menu(
       name: 'Transaction Feed',
       icon: Icons.description,
-      page: TransactionScreen(),
+      page: TransactionFeedScreen(),
     ),
   ];
 

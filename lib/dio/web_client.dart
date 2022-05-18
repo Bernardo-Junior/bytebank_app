@@ -1,8 +1,8 @@
-import 'dart:developer';
-
+import 'package:bytebank/models/contact.dart';
+import 'package:bytebank/models/transaction.dart';
 import 'package:dio/dio.dart';
 
-void findAll() async {
+Future<List<Transaction>> findAll() async {
   final dio = Dio();
 
   dio.interceptors.add(
@@ -18,5 +18,23 @@ void findAll() async {
 
   final response = await dio.get('http://192.168.1.12:8080/transactions');
 
-  inspect(response.data);
+  final List<dynamic> data = response.data;
+
+  final List<Transaction> transactions = List.empty(
+    growable: true,
+  );
+
+  for (Map<String, dynamic> row in data) {
+    transactions.add(
+      Transaction(
+        row['value'],
+        Contact(
+          accountNumber: row['contact']['accountNumber'],
+          name: row['contact']['name'],
+        ),
+      ),
+    );
+  }
+
+  return transactions;
 }
