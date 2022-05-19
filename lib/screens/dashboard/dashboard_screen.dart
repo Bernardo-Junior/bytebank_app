@@ -1,6 +1,7 @@
 import 'package:bytebank/models/menu.dart';
 import 'package:bytebank/screens/contact/contact_screen.dart';
 import 'package:bytebank/screens/dashboard/widgets/menu.dart';
+import 'package:bytebank/screens/transaction/transaction_screen.dart';
 import 'package:bytebank/screens/transaction_feed/transaction_feed_screen.dart';
 
 import 'package:bytebank/screens/transfer/transfer_screen.dart';
@@ -22,7 +23,7 @@ class DashboardScreen extends StatelessWidget {
     Menu(
       name: 'Transfers online',
       icon: Icons.monetization_on,
-      page: TransferScreen(),
+      page: TransactionScreen(),
     ),
     Menu(
       name: 'Transaction Feed',
