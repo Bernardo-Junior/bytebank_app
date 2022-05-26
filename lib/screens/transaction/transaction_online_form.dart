@@ -1,4 +1,4 @@
-import 'package:bytebank/dio/web_client.dart';
+import 'package:bytebank/dio/web_client/transaction_web_client.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/models/transaction.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class TransactionOnlineForm extends StatefulWidget {
 
 class _TransactionOnlineFormState extends State<TransactionOnlineForm> {
   final TextEditingController _valueController = TextEditingController();
-
+  final TransactionWebClient _webClient = TransactionWebClient();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +64,7 @@ class _TransactionOnlineFormState extends State<TransactionOnlineForm> {
                       if (value != null) {
                         final transactionCreated =
                             Transaction(value, widget.contact);
-                        save(transactionCreated).then(
+                        _webClient.save(transactionCreated).then(
                           (transaction) {
                             if (transaction != null) {
                               Navigator.pop(context);
