@@ -1,7 +1,10 @@
+import 'package:bytebank/components/response_dialog.dart';
+import 'package:bytebank/components/transaction_auth_dialog.dart';
 import 'package:bytebank/dio/web_client/transaction_web_client.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/models/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class TransactionOnlineForm extends StatefulWidget {
   final Contact contact;
@@ -15,8 +18,11 @@ class TransactionOnlineForm extends StatefulWidget {
 class _TransactionOnlineFormState extends State<TransactionOnlineForm> {
   final TextEditingController _valueController = TextEditingController();
   final TransactionWebClient _webClient = TransactionWebClient();
+  final String transactionId = Uuid().v4();
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
+    print(transactionId);
     return Scaffold(
       appBar: AppBar(
         title: Text('New transaction'),
@@ -57,28 +63,89 @@ class _TransactionOnlineFormState extends State<TransactionOnlineForm> {
                 child: SizedBox(
                   width: double.maxFinite,
                   child: ElevatedButton(
-                    child: Text('Transfer'),
-                    onPressed: () {
-                      final double? value =
-                          double.tryParse(_valueController.text);
-                      if (value != null) {
-                        final transactionCreated =
-                            Transaction(value, widget.contact);
-                        _webClient.save(transactionCreated).then(
-                          (transaction) {
-                            if (transaction != null) {
-                              Navigator.pop(context);
+                    child: !loading
+                        ? Text('Transfer')
+                        : Container(
+                            width: 15,
+                            height: 15,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ),
+                    onPressed: !loading
+                        ? () async {
+                            final double? value =
+                                double.tryParse(_valueController.text);
+                            if (value != null) {
+                              final transactionCreated = Transaction(
+                                transactionId,
+                                value,
+                                widget.contact,
+                              );
+                              await showDialog(
+                                context: context,
+                                builder: (ctx) => TransactionAuthDialog(
+                                  onConfirm: (code) async {
+                                    await save(transactionCreated, code);
+                                  },
+                                ),
+                              );
                             }
-                          },
-                        );
-                      }
-                    },
+                          }
+                        : null,
                   ),
                 ),
               )
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Future<void> save(
+    Transaction transactionCreated,
+    String code,
+  ) async {
+    setState(() {
+      loading = true;
+    });
+    final Transaction? transaction =
+        await _webClient.save(transactionCreated, code).catchError(
+      (e) async {
+        if (e.response != null &&
+            _webClient.statusCodeResponses.containsKey(
+              [e.response.statusCode],
+            )) {
+          await _showMessage(
+              _webClient.statusCodeResponses[e.response.statusCode]!);
+        } else {
+          await _showMessage('Unknown error');
+        }
+      },
+    ).whenComplete(() {
+      setState(() {
+        loading = false;
+      });
+    });
+
+    if (transaction != null) {
+      await showDialog(
+        context: context,
+        builder: (ctx) => SuccessDialog(
+          'Sucessfull transaction',
+        ),
+      );
+
+      Navigator.pop(context);
+    }
+  }
+
+  Future<dynamic> _showMessage(String responseError) {
+    return showDialog(
+      context: context,
+      builder: (ctx) => FailureDialog(
+        responseError,
       ),
     );
   }

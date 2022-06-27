@@ -1,10 +1,12 @@
 // ignore_for_file: unused_import
 
+import 'package:bytebank/components/transaction_auth_dialog.dart';
 import 'package:bytebank/dio/web_client.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/models/transaction.dart';
 import 'package:bytebank/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 void main() async {
   runApp(BytebankApp());

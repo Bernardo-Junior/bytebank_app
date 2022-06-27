@@ -2,7 +2,12 @@ import 'package:dio/dio.dart';
 
 class DioInterceptor {
   static Dio init() {
-    final dio = Dio();
+    final dio = Dio(
+      BaseOptions(
+        receiveTimeout: 5000,
+        connectTimeout: 5000,
+      ),
+    );
 
     dio.interceptors.add(
       InterceptorsWrapper(

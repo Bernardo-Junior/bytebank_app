@@ -23,18 +23,27 @@ class TransactionWebClient {
     return transactions;
   }
 
-  Future<Transaction?> save(Transaction transaction) async {
+  final Map<int, String> statusCodeResponses = {
+    400: 'There was an error submitting transaction',
+    401: 'authentication failed',
+    409: 'transaction always exists'
+  };
+
+  Future<Transaction?> save(Transaction transaction, String code) async {
     final transactionJson = jsonEncode(transaction.toJson());
+
     final response = await dio.post(
       baseUrl,
       options: Options(
         headers: {
           'Contenxt-type': 'application/json',
-          'password': '1000',
+          'password': code,
         },
       ),
       data: transactionJson,
     );
+
+    print(Transaction.fromJson(response.data));
 
     return response.data != null ? Transaction.fromJson(response.data) : null;
   }
