@@ -100,7 +100,7 @@ class _TransactionFeedScreenState extends State<TransactionFeedScreen> {
                                   ),
                                 ),
                                 subtitle: Text(
-                                  transaction.contact.accountNumber.toString(),
+                                  transaction.contact!.accountNumber.toString(),
                                   style: TextStyle(
                                     fontSize: 16.0,
                                   ),

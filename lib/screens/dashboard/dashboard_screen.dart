@@ -22,7 +22,7 @@ class DashboardScreen extends StatelessWidget {
     ),
     Menu(
       name: 'Transfers online',
-      icon: Icons.monetization_on,
+      icon: Icons.monetization_on_outlined,
       page: TransactionScreen(),
     ),
     Menu(
@@ -40,31 +40,40 @@ class DashboardScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('DashBoard'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset(
-              'lib/assets/images/bytebank_logo.png',
+      body: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    'lib/assets/images/bytebank_logo.png',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 100,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: menu.length,
+                      itemBuilder: (context, index) {
+                        final item = menu[index];
+                        return MenuComponent(menu: item);
+                      },
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              height: 100,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: menu.length,
-                itemBuilder: (context, index) {
-                  final item = menu[index];
-                  return MenuComponent(menu: item);
-                },
-              ),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }

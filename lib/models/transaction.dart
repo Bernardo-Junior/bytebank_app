@@ -1,15 +1,15 @@
 import 'contact.dart';
 
 class Transaction {
-  final String id;
+  final String? id;
   final double value;
-  final Contact contact;
+  final Contact? contact;
 
   Transaction(
     this.id,
     this.value,
     this.contact,
-  );
+  ) : assert(value > 0);
 
   @override
   String toString() {
@@ -26,6 +26,6 @@ class Transaction {
   Map<String, dynamic> toJson() => {
         'id': id,
         'value': value,
-        'contact': contact.toJson(),
+        'contact': contact?.toJson(),
       };
 }
