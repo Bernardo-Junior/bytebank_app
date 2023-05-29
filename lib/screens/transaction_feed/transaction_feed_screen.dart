@@ -90,6 +90,7 @@ class _TransactionFeedScreenState extends State<TransactionFeedScreen> {
                           itemBuilder: (context, index) {
                             final Transaction transaction = transactions[index];
                             return Card(
+                              key: ValueKey('transaction$index'),
                               child: ListTile(
                                 leading: Icon(Icons.monetization_on),
                                 title: Text(

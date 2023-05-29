@@ -33,6 +33,7 @@ class _ContactFormState extends State<ContactForm> {
       body: Column(
         children: [
           Input(
+            key: ValueKey('name_input'),
             controller: _controllerName,
             typeInput: TextInputType.name,
             label: 'Full name',
@@ -40,6 +41,7 @@ class _ContactFormState extends State<ContactForm> {
             enableBorder: false,
           ),
           Input(
+            key: ValueKey('account_input'),
             controller: _controllerAccount,
             typeInput: TextInputType.number,
             label: 'Account Number',
@@ -57,6 +59,7 @@ class _ContactFormState extends State<ContactForm> {
               width: double.maxFinite,
               height: 40,
               child: ElevatedButton(
+                key: ValueKey('send_button'),
                 onPressed: () {
                   final String name = _controllerName.text;
                   final int? accountNumber =

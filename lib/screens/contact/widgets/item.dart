@@ -44,6 +44,7 @@ class ContactItem extends StatelessWidget {
           child: Row(
             children: [
               IconButton(
+                key: ValueKey('edit_contact'),
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -62,6 +63,7 @@ class ContactItem extends StatelessWidget {
                 ),
               ),
               IconButton(
+                key: ValueKey('remove_contact'),
                 onPressed: () async {
                   final id = await contactDao.delete(contact.id!);
 

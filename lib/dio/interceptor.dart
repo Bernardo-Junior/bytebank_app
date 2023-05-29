@@ -4,8 +4,8 @@ class DioInterceptor {
   static Dio init() {
     final dio = Dio(
       BaseOptions(
-        receiveTimeout: 5000,
-        connectTimeout: 5000,
+        receiveTimeout: Duration(seconds: 5000),
+        connectTimeout: Duration(seconds: 5000),
       ),
     );
 

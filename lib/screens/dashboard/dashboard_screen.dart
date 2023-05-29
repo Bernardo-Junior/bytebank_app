@@ -37,7 +37,9 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: ValueKey('scaffold_dashboard'),
       appBar: AppBar(
+        key: ValueKey('appbar'),
         title: Text('DashBoard'),
       ),
       body: Column(
@@ -55,11 +57,15 @@ class DashboardScreen extends StatelessWidget {
             child: Container(
               height: 100,
               child: ListView.builder(
+                key: ValueKey('menu_options'),
                 scrollDirection: Axis.horizontal,
                 itemCount: menu.length,
                 itemBuilder: (context, index) {
                   final item = menu[index];
-                  return MenuComponent(menu: item);
+                  return MenuComponent(
+                    key: ValueKey('item$index'),
+                    menu: item,
+                  );
                 },
               ),
             ),

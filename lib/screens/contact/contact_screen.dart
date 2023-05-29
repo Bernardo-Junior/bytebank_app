@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/contact/contact_controller.dart';
 import 'package:bytebank/screens/contact/widgets/form.dart';
@@ -23,7 +25,10 @@ class ContactsScreen extends StatelessWidget {
                 strokeWidth: 2,
               ),
             ),
-          Text(text),
+          Text(
+            text,
+            key: ValueKey('body_message'),
+          ),
         ],
       ),
     );
@@ -35,6 +40,13 @@ class ContactsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Contacts'),
+        leading: IconButton(
+          key: ValueKey('back_contacts'),
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: AnimatedBuilder(
         animation: Listenable.merge(
@@ -53,7 +65,9 @@ class ContactsScreen extends StatelessWidget {
             itemCount: _contactController.contacts.value.length,
             itemBuilder: (context, index) {
               final Contact contact = _contactController.contacts.value[index];
+
               return ContactItem(
+                key: ValueKey('contact$index'),
                 contact: contact,
                 contactController: _contactController,
               );
@@ -62,6 +76,7 @@ class ContactsScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        key: ValueKey('floating_create_contact'),
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
