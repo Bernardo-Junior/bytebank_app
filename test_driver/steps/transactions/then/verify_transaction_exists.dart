@@ -15,14 +15,7 @@ class VerifyTransactionExists extends And1WithWorld<String, FlutterWorld> {
 
   @override
   Future<void> executeStep(String key) async {
-    final contactItemReference = find.byValueKey(key);
-
-    bool contactItemExists = await FlutterDriverUtils.isPresent(
-      world.driver,
-      contactItemReference,
-    );
-
-    expect(contactItemExists, true);
+    await world.driver!.waitFor(find.byValueKey(key));
   }
 
   @override
